@@ -115,15 +115,19 @@ script.register_looped("Drift Loop", function(script)
     if PED.IS_PED_IN_ANY_VEHICLE(self.get_ped(), true) then
         if is_car and DriftTires and PAD.IS_CONTROL_PRESSED(0, 21) then
             VEHICLE.SET_DRIFT_TYRES(current_vehicle, true)
+            VEHICLE.SET_VEHICLE_CHEAT_POWER_INCREASE(current_vehicle, 7)
         else
             VEHICLE.SET_DRIFT_TYRES(current_vehicle, false)
+            VEHICLE.SET_VEHICLE_CHEAT_POWER_INCREASE(current_vehicle, 1.0)
         end
         script:yield()
         if is_car and ShiftDrift and PAD.IS_CONTROL_PRESSED(0, 21) and not DriftTires then
             VEHICLE.SET_VEHICLE_REDUCE_GRIP(current_vehicle, true)
             VEHICLE.SET_VEHICLE_REDUCE_GRIP_LEVEL(current_vehicle, DriftIntensity)
+            VEHICLE.SET_VEHICLE_CHEAT_POWER_INCREASE(current_vehicle, 5)
         else
             VEHICLE.SET_VEHICLE_REDUCE_GRIP(current_vehicle, false)
+            VEHICLE.SET_VEHICLE_CHEAT_POWER_INCREASE(current_vehicle, 1.0)
         end
     end
 end)
