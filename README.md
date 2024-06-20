@@ -7,6 +7,9 @@ It also has a few other fun features for car enthusiasts.
 
 ![image](https://github.com/xesdoog/TokyoDrift/assets/66764345/9c1f9d05-958d-4a36-a32d-6434b8612abb)
 
+>[!NOTE]
+> Every feature in this script works whether you're a driver or a passenger. You can sit in a friend's car and make it drift or give it NOS.
+
 ## Credits:
 
 - [Harmless](https://github.com/harmless05) for the original script (Shift-Drift).
