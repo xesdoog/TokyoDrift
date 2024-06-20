@@ -14,3 +14,4 @@ It also has a few other fun features for car enthusiasts.
 
 - [Harmless](https://github.com/harmless05) for the original script (Shift-Drift).
 - [DeadlineEm](https://github.com/deadlineem) for figuring stuff out with me and being a good friend.
+- [xiaoxiao](https://github.com/xiaoxiao921) for helping figure out the exhaust issue.
