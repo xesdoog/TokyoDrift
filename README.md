@@ -13,3 +13,4 @@ It also has a few other fun features for car enthusiasts.
 ## Credits:
 
 - [Harmless](https://github.com/harmless05) for the original script (Shift-Drift).
+- [DeadlineEm](https://github.com/deadlineem) for figuring stuff out with me and being a good friend.
