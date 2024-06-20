@@ -5,7 +5,7 @@ Lua script for YimMenu that helps you go sideways in GTA Online. _SKRRT_
 This is a much better way to drift cars than that retarded _dRiFt TUnE_ that R* came up with. 🤦‍♂️
 It also has a few other fun features for car enthusiasts.
 
-![image](https://github.com/xesdoog/TokyoDrift/assets/66764345/9c1f9d05-958d-4a36-a32d-6434b8612abb)
+![image](https://github.com/xesdoog/TokyoDrift/assets/66764345/39c129b7-7464-4457-916f-141fd64eb003)
 
 >[!NOTE]
 > Every feature in this script works whether you're a driver or a passenger. You can sit in a friend's car and make it drift or give it NOS.
