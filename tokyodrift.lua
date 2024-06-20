@@ -164,16 +164,10 @@ vehicle_name = vehicles.get_vehicle_display_name(ENTITY.GET_ENTITY_MODEL(current
             sfx = false
         end
         ImGui.SameLine(); ptfx, ptfxPressed = ImGui.Checkbox("PTFX", ptfx, true)
-        widgetToolTip(false, "Enables exhaust fire when using 'Speed Boost'.\n\nNOTE: This feature doesn't work on almost all aftermaket exhausts. If you can't see fire coming out of yours, go to LSC and equip a different one or revert to stock exhaust.")
+        widgetToolTip(false, "Enables exhaust fire when using 'Speed Boost'.")
         if ptfxPressed and not speedBoost then
             gui.show_error("TokyoDrift", "This option is unavailable without 'Speed Boost'.")
             ptfx = false
-        end
-        if ptfx then
-            ptfxAlt, _ = ImGui.Checkbox("Override PTFX", ptfxAlt, true)
-            widgetToolTip(false,"Use a different method to spawn the NOS flame. This will completely ignore the exhaust and spawn the flame in a preset position. Doesn't look nice but avoids the exhaust issue until either R* or YimMenu fixes it.")
-        else
-            ptfxAlt = false
         end
         ImGui.Spacing();hornLight, _ = ImGui.Checkbox("High Beams on Horn", hornLight, true)
         widgetToolTip(false, "Flash high beams when honking.")
@@ -371,13 +365,15 @@ script.register_looped("Drift Loop", function(script)
                     end
                 else
                     if PED.IS_PED_SITTING_IN_ANY_VEHICLE(self.get_ped()) then
-                        if PAD.IS_DISABLED_CONTROL_PRESSED(0, tdBtn) or PAD.IS_CONTROL_PRESSED(0, 71) then
-                            failSound = AUDIO.PLAY_SOUND_FROM_ENTITY(-1, "Engine_fail", current_vehicle, "DLC_PILOT_ENGINE_FAILURE_SOUNDS", true, 0)
-                            repeat
-                                script:sleep(50)
-                            until
-                                AUDIO.HAS_SOUND_FINISHED(failSound) and PAD.IS_CONTROL_PRESSED(0, tdBtn) == false and PAD.IS_CONTROL_PRESSED(0, 71) == false
-                            AUDIO.STOP_SOUND(failSound)
+                        if PAD.IS_DISABLED_CONTROL_PRESSED(0, tdBtn) and PAD.IS_CONTROL_PRESSED(0, 71) then
+                            if VEHICLE.GET_VEHICLE_ENGINE_HEALTH(current_vehicle) < 300 then
+                                failSound = AUDIO.PLAY_SOUND_FROM_ENTITY(-1, "Engine_fail", current_vehicle, "DLC_PILOT_ENGINE_FAILURE_SOUNDS", true, 0)
+                                repeat
+                                    script:sleep(50)
+                                until
+                                    AUDIO.HAS_SOUND_FINISHED(failSound) and PAD.IS_CONTROL_PRESSED(0, tdBtn) == false and PAD.IS_CONTROL_PRESSED(0, 71) == false
+                                AUDIO.STOP_SOUND(failSound)
+                            end
                         end
                     end
                 end
@@ -411,41 +407,6 @@ script.register_looped("Speed Boost ptfx", function(spbptfx)
             if PAD.IS_DISABLED_CONTROL_PRESSED(0, tdBtn) and PAD.IS_CONTROL_PRESSED(0, 71) then
                 if VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(current_vehicle) then
                     local effect  = "veh_xs_vehicle_mods"
-                    if not ptfxAlt then
-                        exhaust_bones = {"exhaust",
-                                            "exhaust_2",
-                                            "exhaust_3",
-                                            "exhaust_4",
-                                            "exhaust_5",
-                                            "exhaust_6",
-                                            "exhaust_7",
-                                            "exhaust_8",
-                                            "exhaust_9",
-                                            "exhaust_10",
-                                            "exhaust_11",
-                                            "exhaust_12",
-                                            "exhaust_13",
-                                            "exhaust_14",
-                                            "exhaust_15",
-                                            "exhaust_16",
-                                            }
-                        ptfx_X_axis = 0.0
-                        ptfx_Y_axis = -0.1
-                    else
-                        if is_car then
-                            exhaust_bones = {"neon_b"}
-                            ptfx_X_axis   = 0.0
-                            ptfx_Y_axis   = -0.469420
-                        elseif is_bike then
-                            exhaust_bones = {"chassis_dummy"}
-                            ptfx_X_axis   = -0.164
-                            ptfx_Y_axis   = -0.869420
-                        end
-                    end
-                    -- if not STREAMING.HAS_NAMED_PTFX_ASSET_LOADED(effect) then
-                    --     STREAMING.REQUEST_NAMED_PTFX_ASSET(effect)
-                    --     coroutine.yield()
-                    -- end
                     local counter = 0
                     while not STREAMING.HAS_NAMED_PTFX_ASSET_LOADED(effect) do
                         STREAMING.REQUEST_NAMED_PTFX_ASSET(effect)
@@ -456,12 +417,12 @@ script.register_looped("Speed Boost ptfx", function(spbptfx)
                             counter = counter + 1
                         end
                     end
-                    for _, boneName in ipairs(exhaust_bones) do
-                        local exhaust = ENTITY.GET_ENTITY_BONE_INDEX_BY_NAME(current_vehicle, boneName)
-                        local nosPtfx
-                        if exhaust ~= -1 then
+                    local exhaustCount = VEHICLE.GET_VEHICLE_MAX_EXHAUST_BONE_COUNT_()
+                    for i = 0, exhaustCount do
+                        local retBool, boneIndex = VEHICLE.GET_VEHICLE_EXHAUST_BONE_(current_vehicle, i, retBool, boneIndex)
+                        if retBool then
                             GRAPHICS.USE_PARTICLE_FX_ASSET(effect)
-                            nosPtfx = GRAPHICS.START_NETWORKED_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("veh_nitrous", current_vehicle, ptfx_X_axis, ptfx_Y_axis, 0.0, 0.0, 0.0, 0.0, exhaust, 1.0, false, false, false, 0, 0, 0)
+                            nosPtfx = GRAPHICS.START_NETWORKED_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("veh_nitrous", current_vehicle, ptfx_X_axis, ptfx_Y_axis, 0.0, 0.0, 0.0, 0.0, boneIndex, 1.0, false, false, false, 0, 0, 0)
                             table.insert(nosptfx_t, nosPtfx)
                             nos_started = true
                         end
