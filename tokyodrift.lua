@@ -789,6 +789,8 @@ script.register_looped("LCTRL SFX", function(tstp)
                 rpmThreshold = 0.69
             end
             local currRPM = VEHICLE.GET_VEHICLE_CURRENT_REV_RATIO_(current_vehicle)
+            local _, _,_, currentVehPtr = onVehEnter()
+            local currGear = currentVehPtr:add(vehOffsets.cg):get_byte()
             if PAD.IS_CONTROL_RELEASED(0, 71) and currRPM < 1.0 and currRPM > rpmThreshold and currGear ~= 0 then
                 local popSound2
                 local randStime = math.random(60, 200)
@@ -815,11 +817,22 @@ script.register_looped("pops&bangs", function(pnb)
     if isDriving() and VEHICLE.GET_IS_VEHICLE_ENGINE_RUNNING(current_vehicle) then
         if is_car or is_bike or is_quad then
             if popsNbangs then
+                local flame_size
                 local counter = 0
                 local asset   = "core"
                 local currRPM = VEHICLE.GET_VEHICLE_CURRENT_REV_RATIO_(current_vehicle)
                 local _, _,_, currentVehPtr = onVehEnter()
                 local currGear = currentVehPtr:add(vehOffsets.cg):get_byte()
+                if not louderPops then
+                    flame_size = 0.42069
+                else
+                    flame_size = 1.5
+                end
+                if VEHICLE.IS_VEHICLE_STOPPED(current_vehicle) then
+                    rpmThreshold = 0.45
+                else
+                    rpmThreshold = 0.69
+                end
                 while not STREAMING.HAS_NAMED_PTFX_ASSET_LOADED(asset) do
                     STREAMING.REQUEST_NAMED_PTFX_ASSET(asset)
                     pnb:yield()
@@ -837,7 +850,7 @@ script.register_looped("pops&bangs", function(pnb)
                             currRPM = VEHICLE.GET_VEHICLE_CURRENT_REV_RATIO_(current_vehicle)
                             if currRPM < 1.0 and currRPM > 0.55 then
                                 GRAPHICS.USE_PARTICLE_FX_ASSET(asset)
-                                popsPtfx = GRAPHICS.START_NETWORKED_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("veh_backfire", current_vehicle, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, boneIndex, 1.5, false, false, false, 0, 0, 0)
+                                popsPtfx = GRAPHICS.START_NETWORKED_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("veh_backfire", current_vehicle, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, boneIndex, flame_size, false, false, false, 0, 0, 0)
                                 GRAPHICS.STOP_PARTICLE_FX_LOOPED(popsPtfx)
                                 table.insert(popsPtfx_t, popsPtfx)
                                 started_popSound2 = true
