@@ -47,7 +47,7 @@ Lua script for YimMenu that adds a few fun features for car enthusiasts.
  - Starts an RGB loop on your headlights.
 
 #### Change Engine Sound:
- - Only works for land vehicles: This opens a new window providing you with a list of all vehicles, choose one and press the button to use that model's sound. (This is only local, other players will still hear the default vehicle sound).
+ - Only works on land vehicles: This opens a new window providing you with a list of all vehicles, choose one and press the button to use that model's sound. (This is only local, other players will still hear the default vehicle sound).
 
 #### Destroy/Fix Engine:
  This button switches labels and functionalities depending on your vehicle's engine health:
